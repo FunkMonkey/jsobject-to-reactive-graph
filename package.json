@@ -26,5 +26,8 @@
   },
   "peerDependencies": {
     "rx": "4.1.0"
+  },
+  "dependencies": {
+    "graphlib": "2.1.0"
   }
 }
