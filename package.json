@@ -28,6 +28,7 @@
     "rx": "4.1.0"
   },
   "dependencies": {
-    "graphlib": "2.1.0"
+    "graphlib": "2.1.0",
+    "ramda": "0.21.0"
   }
 }
