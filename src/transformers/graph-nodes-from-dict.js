@@ -15,6 +15,4 @@ export default function( graphConfig ) {
   const nodes = graphConfig.nodes || graphConfig.origin.nodes;
 
   graphConfig.nodes = dictToNodeConfigs( nodes );
-
-  return graphConfig;
 }

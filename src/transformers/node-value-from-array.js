@@ -9,6 +9,4 @@ export default function( nodeConfig ) {
     operator: prevValue[1],
     args: prevValue.splice( 2 )
   }
-
-  return nodeConfig;
 }

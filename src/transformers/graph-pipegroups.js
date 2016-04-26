@@ -1,7 +1,7 @@
 import toNodeConfig from '../to-node-config';
 import R from 'ramda';
 
-const dictToPipegroups = R.pipe(
+export const dictToPipegroups = R.pipe(
   R.toPairs,
   R.map( pipePair => ({
     id: pipePair[0],
@@ -20,20 +20,33 @@ export default function( graphConfig ) {
   if( !graphConfig.nodes )
     graphConfig.nodes = [];
 
-  pipegroups.forEach( pg => {
+  const pgConfigs = pipegroups.map( pg => {
 
-    pg.nodes.forEach( ( node, index ) => {
+    const pgConfig = {
+      id: pg.id,
+      origin: pg,
+      nodeConfigs: null
+    };
+
+    pgConfig.nodeConfigs = pg.nodes.map( ( node, index ) => {
       const nodeConfig = toNodeConfig( node, graphConfig );
+
       nodeConfig.id = `${pg.id}[${index}]`;
       nodeConfig.value = node;
-      nodeConfig.pipegroup = pg;
-      nodeConfig.pipegroupIndex = index;
+      nodeConfig._pipegroupData = {
+        config: pgConfig,
+        origin: node,
+        index
+      };
 
       graphConfig.nodes.push( nodeConfig );
+      return nodeConfig;
     } );
+
+    return pgConfig;
   } );
 
-  graphConfig.pipegroups = pipegroups;
-
-  return graphConfig;
+  graphConfig._pipegroupData = {
+    configs: pgConfigs
+  };
 }

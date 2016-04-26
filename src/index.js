@@ -1,22 +1,34 @@
 import { transform, transformGraphConfig, transformNodeConfig } from './transform';
 import toGraph from './to-graph';
-import graphNodesFromDict from './transformers/graph-nodes-from-dict';
-import graphNodesFromInput from './transformers/graph-nodes-from-input';
+
+// graph transformers
+import nodesFromDict from './transformers/graph-nodes-from-dict';
+import nodesFromInput from './transformers/graph-nodes-from-input';
 import graphPipegroups from './transformers/graph-pipegroups';
+import graphComponents from './transformers/graph-components';
+import graphComponentMacros from './transformers/graph-component-macros';
+
+// node transformers
+import appendOperatorToID from './transformers/node-append-operator-to-id';
+import nodeComponents from './transformers/node-components';
 import nodePipegroups from './transformers/node-pipegroups';
-import nodeValueFromArray from './transformers/node-value-from-array';
-import nodeValueFromOrigin from './transformers/node-value-from-origin';
+import valueFromArray from './transformers/node-value-from-array';
+import valueFromOrigin from './transformers/node-value-from-origin';
 
 const transformers = {
   graph: {
-    nodesFromDict: graphNodesFromDict,
-    nodesFromInput: graphNodesFromInput,
+    nodesFromDict,
+    nodesFromInput,
+    components: graphComponents,
+    componentMacros: graphComponentMacros,
     pipegroups: graphPipegroups
   },
   node: {
+    appendOperatorToID,
+    components: nodeComponents,
     pipegroups: nodePipegroups,
-    valueFromArray: nodeValueFromArray,
-    valueFromOrigin: nodeValueFromOrigin
+    valueFromArray,
+    valueFromOrigin
   }
 }
 

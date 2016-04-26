@@ -2,22 +2,25 @@ import R from 'ramda';
 
 
 export default function( nodeConfig ) {
-  const pg = nodeConfig.pipegroup;
+  const pg = nodeConfig._pipegroupData.config;
 
-
-  // TODO: add pipegroup names to sources
   nodeConfig.sources = nodeConfig.sources.map( sourceName => {
-    // TODO: throw error if sourcePG has no nodes
-    const sourcePG = R.find( x => x.id === sourceName, nodeConfig.graphConfig.pipegroups );
+
+    const sourcePG = R.find( x => x.id === sourceName, nodeConfig.graphConfig._pipegroupData.configs );
 
     if( !sourcePG )
       throw new Error( `Pipegroup '${sourceName}' referenced by '${nodeConfig.id}' does not exist!` );
 
-    return `${sourcePG.id}[${sourcePG.nodes.length - 1}]`;
-  } )
+    const lastNodeIndex = sourcePG.nodeConfigs.length - 1;
 
-  if( nodeConfig.pipegroupIndex > 0 )
-    nodeConfig.sources = R.prepend( `${pg.id}[${nodeConfig.pipegroupIndex-1}]`, nodeConfig.sources );
+    if( lastNodeIndex < 0 )
+      throw new Error( `Pipegroup '${sourceName}' referenced by '${nodeConfig.id}' does not have any nodes!` );
 
-  return nodeConfig;
+    return sourcePG.nodeConfigs[lastNodeIndex].id;
+  } );
+
+  if( nodeConfig._pipegroupData.index > 0 ) {
+    const prevID = pg.nodeConfigs[nodeConfig._pipegroupData.index-1].id;
+    nodeConfig.sources = R.prepend( prevID, nodeConfig.sources );
+  }
 }
