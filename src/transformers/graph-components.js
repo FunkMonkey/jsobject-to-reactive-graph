@@ -1,53 +1,46 @@
 import R from 'ramda';
+import ifDictThenToArray from '../utils/if-dict-then-to-array';
+import ensureTransformLayer from '../utils/ensure-transform-layer';
 
-import { dictToPipegroups } from './graph-pipegroups';
+import { pairToPipegroup } from './graph-pipegroups';
 
-const dictToComponents = R.pipe(
-  R.toPairs,
-  R.map( compPair => ({
-    id: compPair[0],
-    value: compPair[1]
-  }) )
-);
+function pairToComponent( [id, compOrig] ) {
+  const component = ensureTransformLayer( compOrig );
+  component.id = id;
+  return component;
+}
 
-export default function graphComponents( graphConfig ) {
-  let components = graphConfig.components || graphConfig.origin.components;
+function componentToPair( component ) {
+  return [ component.id, component ];
+}
 
-  if( !Array.isArray( components ) && typeof components === 'object' ) {
-    components = dictToComponents( components );
-  }
+export default function graphComponents( graph ) {
 
-  if( !graphConfig.pipegroups )
-    graphConfig.pipegroups = [];
+  const components = ifDictThenToArray( pairToComponent, graph.components );
 
-  const compConfigs = components.map( component => {
+  const pipegroups = [];
 
-    const pipegroups = dictToPipegroups( component.value.pipegroups );
-    const compConfig = {
-      id: component.id,
-      origin: component,
-      pipegroups: null
-    };
+  graph.components = components.map( componentOrig => {
+    const component = ensureTransformLayer( componentOrig );
 
-    compConfig.pipegroups = pipegroups.map( pg => {
-      const compPG = {
-        id: `${component.id}::${pg.id}`,
-        nodes: pg.nodes,
-        _componentData: {
-          origin: pg,
-          config: compConfig
-        }
+    const compPGs = ifDictThenToArray( pairToPipegroup, component.pipegroups );
+    component.pipegroups = compPGs.map( pgOrig => {
+      const pg = ensureTransformLayer( pgOrig );
+      pg.id = `${component.id}::${pg.id}`;
+      pg._componentData = {
+        component
       };
 
-      graphConfig.pipegroups.push( compPG );
+      pipegroups.push( pg );
 
-      return compPG;
+      return pg;
     } )
 
-    return compConfig;
+    return component;
   } );
 
-  graphConfig._componentData = {
-    configs: compConfigs
-  };
+  graph.pipegroups = pipegroups;
+  graph._componentData = {
+    componentsById: R.fromPairs( R.map( componentToPair, graph.components ) )
+  }
 }

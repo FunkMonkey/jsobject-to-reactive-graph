@@ -3,7 +3,6 @@ import toGraph from './to-graph';
 
 // graph transformers
 import nodesFromDict from './transformers/graph-nodes-from-dict';
-import nodesFromInput from './transformers/graph-nodes-from-input';
 import graphPipegroups from './transformers/graph-pipegroups';
 import graphComponents from './transformers/graph-components';
 import graphComponentMacros from './transformers/graph-component-macros';
@@ -13,12 +12,10 @@ import appendOperatorToID from './transformers/node-append-operator-to-id';
 import nodeComponents from './transformers/node-components';
 import nodePipegroups from './transformers/node-pipegroups';
 import valueFromArray from './transformers/node-value-from-array';
-import valueFromOrigin from './transformers/node-value-from-origin';
 
 const transformers = {
   graph: {
     nodesFromDict,
-    nodesFromInput,
     components: graphComponents,
     componentMacros: graphComponentMacros,
     pipegroups: graphPipegroups
@@ -27,8 +24,7 @@ const transformers = {
     appendOperatorToID,
     components: nodeComponents,
     pipegroups: nodePipegroups,
-    valueFromArray,
-    valueFromOrigin
+    valueFromArray
   }
 }
 

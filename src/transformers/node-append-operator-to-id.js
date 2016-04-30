@@ -1,6 +1,6 @@
+export default function appendOperatorToID( node ) {
+  if( !node.value.operator )
+    throw new Error( `Node '${node.id}' does not have 'value.operator' ` );
 
-export default function appendOperatorToID( nodeConfig ) {
-  if( !nodeConfig.value.operator )
-    throw new Error( `NodeConfig for ${nodeConfig.id} does not have 'value.operator' ` );
-  nodeConfig.id += `(${nodeConfig.value.operator})`;
+  node.id = node.id + `(${node.value.operator})`;
 }

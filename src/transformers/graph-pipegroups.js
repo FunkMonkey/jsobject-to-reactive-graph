@@ -1,52 +1,41 @@
-import toNodeConfig from '../to-node-config';
 import R from 'ramda';
+import ifDictThenToArray from '../utils/if-dict-then-to-array';
 
-export const dictToPipegroups = R.pipe(
-  R.toPairs,
-  R.map( pipePair => ({
-    id: pipePair[0],
-    nodes: pipePair[1]
-  }) )
-);
+import ensureTransformLayer from '../utils/ensure-transform-layer';
 
-export default function( graphConfig ) {
+export function pairToPipegroup( [id, nodes] ) {
+  return { id, nodes };
+}
 
-  let pipegroups = graphConfig.pipegroups || graphConfig.origin.pipegroups;
+function pipegroupToPair( group ) {
+  return [ group.id, group ];
+}
 
-  if( !Array.isArray( pipegroups ) && typeof pipegroups === 'object' ) {
-    pipegroups = dictToPipegroups( pipegroups );
-  }
+export default function( graph ) {
 
-  if( !graphConfig.nodes )
-    graphConfig.nodes = [];
+  const pipegroups = ifDictThenToArray( pairToPipegroup, graph.pipegroups );
 
-  const pgConfigs = pipegroups.map( pg => {
+  const nodes = [];
+  graph.pipegroups = pipegroups.map( pgOrig => {
 
-    const pgConfig = {
-      id: pg.id,
-      origin: pg,
-      nodeConfigs: null
-    };
+    const pg = ensureTransformLayer( pgOrig );
 
-    pgConfig.nodeConfigs = pg.nodes.map( ( node, index ) => {
-      const nodeConfig = toNodeConfig( node, graphConfig );
-
-      nodeConfig.id = `${pg.id}[${index}]`;
-      nodeConfig.value = node;
-      nodeConfig._pipegroupData = {
-        config: pgConfig,
-        origin: node,
+    pg.nodes = pg.nodes.map( ( nodeOrig, index ) => {
+      const node = ensureTransformLayer( nodeOrig );
+      node._pipegroupData = {
+        pipegroup: pg,
         index
       };
 
-      graphConfig.nodes.push( nodeConfig );
-      return nodeConfig;
+      nodes.push( node );
+      return node;
     } );
 
-    return pgConfig;
+    return pg;
   } );
 
-  graphConfig._pipegroupData = {
-    configs: pgConfigs
-  };
+  graph.nodes = nodes;
+  graph._pipegroupData = {
+    pipegroupsById: R.fromPairs( R.map( pipegroupToPair, graph.pipegroups ) )
+  }
 }

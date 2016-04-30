@@ -1,18 +1,14 @@
-import R from 'ramda';
-import toNodeConfig from '../to-node-config'
 
-const dictToNodeConfigs = R.pipe(
-  R.toPairs,
-  R.map( nodePair => {
-    const nodeConfig = toNodeConfig( nodePair );
-    nodeConfig.id = nodePair[0];
-    nodeConfig.value = nodePair[1];
-    return nodeConfig;
-  } )
-);
+import ensureTransformLayer from '../utils/ensure-transform-layer';
+import ifDictThenToArray from '../utils/if-dict-then-to-array';
 
-export default function( graphConfig ) {
-  const nodes = graphConfig.nodes || graphConfig.origin.nodes;
+function pairToNode( [id, nodeOrig] ) {
+  const node = ensureTransformLayer( nodeOrig );
+  node.id = id;
+  return node;
+}
 
-  graphConfig.nodes = dictToNodeConfigs( nodes );
+
+export default function graphNodesFromDict( graph ) {
+  graph.nodes = ifDictThenToArray( pairToNode, graph.nodes )
 }

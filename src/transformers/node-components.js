@@ -1,11 +1,11 @@
-export default function nodeComponents( nodeConfig ) {
+export default function nodeComponents( node ) {
 
-  // far to hacky!
-  const compConfig = nodeConfig._pipegroupData.config.origin._componentData.config;
+  const pipegroup = node._pipegroupData.pipegroup;
+  const component = pipegroup._componentData.component;
 
-  nodeConfig.sources = nodeConfig.sources.map( sourceName => {
+  node.sources = node.sources.map( sourceName => {
     if( sourceName.indexOf( '::' ) === -1 )
-      return `${compConfig.id}::${sourceName}`;
+      return `${component.id}::${sourceName}`;
     else
       return sourceName;
   } );

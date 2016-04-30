@@ -1,43 +1,46 @@
-import toNodeConfig from './to-node-config';
+// how to save additional data?
+//  - ID or new Object
+//  - positions may change
+//  - don't change original
+//  - not sure if we want to deep-copy
+// how to support both dynamically added data and data from original?
 
-export function transformGraphConfig( graphConfig, gTransformers ) {
-  return gTransformers.reduce( ( prevConf, curr ) => {
-    const newConf = curr( prevConf );
-    return newConf || prevConf;
-  }, graphConfig );
+import ensureTransformLayer from './utils/ensure-transform-layer';
+
+export function transformGraph( graph, gTransformers ) {
+  return gTransformers.reduce( ( prevGraph, curr ) => {
+    const newGraph = curr( prevGraph );
+    // TODO: error if null
+    return newGraph || prevGraph ;
+  }, ensureTransformLayer( graph ) );
 }
 
-
-// export function transformNodeConfig( nodeConfig, nTransformers ) {
-//   return nTransformers.reduce( ( prevConf, curr ) => {
-//     const newConf = curr( prevConf );
-//     return newConf || prevConf;
-//   }, nodeConfig );
-// }
-
-export function transformNodeConfigs( nodeConfigs, nTransformers ) {
-  return nTransformers.reduce( ( prevConfigs, transformer ) => {
-    return prevConfigs.map( conf => transformer( conf ) || conf );
-  }, nodeConfigs );
+export function transformNodes( nodes, nTransformers ) {
+  return nTransformers.reduce( ( prevNodes, transformer ) => {
+    return prevNodes.map( conf => transformer( conf ) || conf ); // TODO: throw Error if null
+  }, nodes );
 }
 
-export function transform( graphInput, gTransformers, nTransformers ) {
-  const graphConfig = {
-    origin: graphInput,
-    nodes: null
-  };
+export function transform( graphOrig, gTransformers, nTransformers ) {
+  const graph = ensureTransformLayer( graphOrig );
 
-  const transformedGraphConfig = transformGraphConfig( graphConfig, gTransformers );
+  if( !graph.nodes )
+    graph.nodes = [];
 
-  const nodeConfigs = transformedGraphConfig.nodes
-    .map( node => toNodeConfig( node, transformedGraphConfig ) );
+  const transformedGraph = transformGraph( graph, gTransformers );
 
-  transformedGraphConfig.nodes = transformNodeConfigs( nodeConfigs, nTransformers );
-  console.log( transformedGraphConfig );
+  const nodes = transformedGraph.nodes
+    .map( nodeOrig => {
+      const node = ensureTransformLayer( nodeOrig );
+      node._graph = transformedGraph;
+      return node;
+    } );
 
-  // transformedGraphConfig.nodes = transformedGraphConfig.nodes
-  //   .map( node => transformNodeConfig( toNodeConfig( node, transformedGraphConfig ),
+  transformedGraph.nodes = transformNodes( nodes, nTransformers );
+
+  // transformedGraph.nodes = transformedGraph.nodes
+  //   .map( node => transformNodeConfig( toNodeConfig( node, transformedGraph ),
   //                                      nTransformers ) );
 
-  return graphConfig;
+  return graph;
 }
