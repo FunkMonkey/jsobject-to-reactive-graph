@@ -11,20 +11,20 @@ export function transformGraph( graph, gTransformers ) {
   return gTransformers.reduce( ( prevGraph, curr ) => {
     const newGraph = curr( prevGraph );
     // TODO: error if null
-    return newGraph || prevGraph ;
+    return newGraph || prevGraph;
   }, ensureTransformLayer( graph ) );
 }
 
 export function transformNodes( nodes, nTransformers ) {
-  return nTransformers.reduce( ( prevNodes, transformer ) => {
-    return prevNodes.map( conf => transformer( conf ) || conf ); // TODO: throw Error if null
-  }, nodes );
+  return nTransformers.reduce( ( prevNodes, transformer ) =>
+    prevNodes.map( conf => transformer( conf ) || conf ) // TODO: throw Error if null
+  , nodes );
 }
 
 export function transform( graphOrig, gTransformers, nTransformers ) {
   const graph = ensureTransformLayer( graphOrig );
 
-  if( !graph.nodes )
+  if ( !graph.nodes )
     graph.nodes = [];
 
   const transformedGraph = transformGraph( graph, gTransformers );

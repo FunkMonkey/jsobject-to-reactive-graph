@@ -11,7 +11,7 @@ export default function toGraph( graphConfig ) {
 
   // connecting nodes
   graphConfig.nodes.forEach( ( node ) => {
-    if( node.sources ) {
+    if ( node.sources ) {
       let edgeIndex = 0;
       node.sources.forEach( sourceName => {
         graph.setEdge( sourceName, node.id, edgeIndex++ );

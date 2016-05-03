@@ -10,5 +10,5 @@ function pairToNode( [id, nodeOrig] ) {
 
 
 export default function graphNodesFromDict( graph ) {
-  graph.nodes = ifDictThenToArray( pairToNode, graph.nodes )
+  graph.nodes = ifDictThenToArray( pairToNode, graph.nodes );
 }

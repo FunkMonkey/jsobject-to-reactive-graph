@@ -15,7 +15,6 @@ function componentToPair( component ) {
 }
 
 export default function graphComponents( graph ) {
-
   const components = ifDictThenToArray( pairToComponent, graph.components );
 
   const pipegroups = [];
@@ -34,7 +33,7 @@ export default function graphComponents( graph ) {
       pipegroups.push( pg );
 
       return pg;
-    } )
+    } );
 
     return component;
   } );
@@ -42,5 +41,5 @@ export default function graphComponents( graph ) {
   graph.pipegroups = pipegroups;
   graph._componentData = {
     componentsById: R.fromPairs( R.map( componentToPair, graph.components ) )
-  }
+  };
 }

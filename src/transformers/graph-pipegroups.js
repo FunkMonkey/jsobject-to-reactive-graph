@@ -11,13 +11,11 @@ function pipegroupToPair( group ) {
   return [ group.id, group ];
 }
 
-export default function( graph ) {
-
+export default function ( graph ) {
   const pipegroups = ifDictThenToArray( pairToPipegroup, graph.pipegroups );
 
   const nodes = [];
   graph.pipegroups = pipegroups.map( pgOrig => {
-
     const pg = ensureTransformLayer( pgOrig );
 
     pg.nodes = pg.nodes.map( ( nodeOrig, index ) => {
@@ -37,5 +35,5 @@ export default function( graph ) {
   graph.nodes = nodes;
   graph._pipegroupData = {
     pipegroupsById: R.fromPairs( R.map( pipegroupToPair, graph.pipegroups ) )
-  }
+  };
 }

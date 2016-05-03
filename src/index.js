@@ -26,7 +26,7 @@ const transformers = {
     pipegroups: nodePipegroups,
     valueFromArray
   }
-}
+};
 
 function convertToGraph( graphInput, gTransformers, nTransformers ) {
   return toGraph( transform( graphInput, gTransformers, nTransformers ) );
@@ -50,4 +50,4 @@ export default {
   transformNodeConfig,
   toGraph,
   transformers
-}
+};
