@@ -1,17 +1,17 @@
 {
-  "name": "rx-json-graph",
-  "version": "0.1.0",
+  "name": "jsobject-to-reactive-graph",
+  "version": "0.2.0",
   "description": "",
-  "keywords": [],
-  "author": "",
+  "keywords": [ "graph", "graphlib", "schema", "reactive", "frp" ],
+  "author": "AndSelm <and.selm@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/.git"
+    "url": "git@github.com:FunkMonkey/jsobject-to-reactive-graph.git"
   },
-  "homepage": "https://github.com/",
+  "homepage": "https://github.com/FunkMonkey/jsobject-to-reactive-graph",
   "bugs": {
-    "url": "https://github.com//issues"
+    "url": "https://github.com/FunkMonkey/jsobject-to-reactive-graph/issues"
   },
   "main": "build/index.js",
   "scripts": {
