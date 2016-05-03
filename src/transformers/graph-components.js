@@ -25,6 +25,7 @@ export default function graphComponents( graph ) {
     const compPGs = ifDictThenToArray( pairToPipegroup, component.pipegroups );
     component.pipegroups = compPGs.map( pgOrig => {
       const pg = ensureTransformLayer( pgOrig );
+      pg.shortID = pg.id;
       pg.id = `${component.id}::${pg.id}`;
       pg._componentData = {
         component
