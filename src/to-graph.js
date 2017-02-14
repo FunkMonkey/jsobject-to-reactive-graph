@@ -1,5 +1,11 @@
 import graphlib from 'graphlib';
 
+/**
+ * Creates a `graphlib` graph from the given config
+ *
+ * @param    {Object}          graphConfig
+ * @return   {graphlib.Graph}
+ */
 export default function toGraph( graphConfig ) {
   const graph = new graphlib.Graph();
 

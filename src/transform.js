@@ -1,10 +1,3 @@
-// how to save additional data?
-//  - ID or new Object
-//  - positions may change
-//  - don't change original
-//  - not sure if we want to deep-copy
-// how to support both dynamically added data and data from original?
-
 import ensureTransformLayer from './utils/ensure-transform-layer';
 
 export function transformGraph( graph, gTransformers ) {
@@ -21,6 +14,16 @@ export function transformNodes( nodes, nTransformers ) {
   , nodes );
 }
 
+/**
+ * Transforms a given JS object to a JS object that can be used with `toGraph`
+ * to create a `graphlib` graph. Transformation happens on graph and on node
+ * level using the passed transformers.
+ *
+ * @param    {Object}               graphOrig       Original graph representation
+ * @param    {GraphTransformer[]}   gTransformers
+ * @param    {NodeTransformer[]}    nTransformers
+ * @return   {Object}
+ */
 export function transform( graphOrig, gTransformers, nTransformers ) {
   const graph = ensureTransformLayer( graphOrig );
 
@@ -37,10 +40,6 @@ export function transform( graphOrig, gTransformers, nTransformers ) {
     } );
 
   transformedGraph.nodes = transformNodes( nodes, nTransformers );
-
-  // transformedGraph.nodes = transformedGraph.nodes
-  //   .map( node => transformNodeConfig( toNodeConfig( node, transformedGraph ),
-  //                                      nTransformers ) );
 
   return graph;
 }
