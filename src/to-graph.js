@@ -16,7 +16,7 @@ export default function toGraph( graphConfig ) {
   } );
 
   // connecting nodes
-  graphConfig.nodes.forEach( ( node ) => {
+  graphConfig.nodes.forEach( node => {
     if ( node.sources ) {
       let edgeIndex = 0;
       node.sources.forEach( sourceName => {
