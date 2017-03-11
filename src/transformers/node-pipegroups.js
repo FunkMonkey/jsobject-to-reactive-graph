@@ -16,7 +16,7 @@ export default function ( node ) {
     if ( lastNodeIndex < 0 )
       throw new Error( `Pipegroup '${sourceName}' referenced by '${node.id}' does not have any nodes!` );
 
-    return sourcePG.nodes[lastNodeIndex].id;
+    return `${sourcePG.id}[${lastNodeIndex}]`;
   } );
 
   if ( pgIndex > 0 ) {
