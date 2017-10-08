@@ -1,5 +1,6 @@
 import { transform, transformGraphConfig, transformNodeConfig } from './transform';
 import toGraph from './to-graph';
+import ensureTransformLayer from './utils/ensure-transform-layer';
 
 // graph transformers
 import nodesFromDict from './transformers/graph-nodes-from-dict';
@@ -28,6 +29,10 @@ const transformers = {
   }
 };
 
+const utils = {
+  ensureTransformLayer
+};
+
 function convertToGraph( graphInput, gTransformers, nTransformers ) {
   return toGraph( transform( graphInput, gTransformers, nTransformers ) );
 }
@@ -39,15 +44,6 @@ export {
   transformGraphConfig,
   transformNodeConfig,
   toGraph,
-  transformers
-};
-
-// default export
-export default {
-  convertToGraph,
-  transform,
-  transformGraphConfig,
-  transformNodeConfig,
-  toGraph,
-  transformers
+  transformers,
+  utils
 };
